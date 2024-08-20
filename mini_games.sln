@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "001_hungry_dog", "001_hungr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "002_console_arkanoid", "002_console_arkanoid\002_console_arkanoid.vcxproj", "{62D77869-4A6A-4BFB-9895-615DE9A9338D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "003_snow", "003_snow\003_snow.vcxproj", "{7438B64E-55A0-48C1-9A60-85F14144DB3E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -41,6 +43,14 @@ Global
 		{62D77869-4A6A-4BFB-9895-615DE9A9338D}.Release|x64.Build.0 = Release|x64
 		{62D77869-4A6A-4BFB-9895-615DE9A9338D}.Release|x86.ActiveCfg = Release|Win32
 		{62D77869-4A6A-4BFB-9895-615DE9A9338D}.Release|x86.Build.0 = Release|Win32
+		{7438B64E-55A0-48C1-9A60-85F14144DB3E}.Debug|x64.ActiveCfg = Debug|x64
+		{7438B64E-55A0-48C1-9A60-85F14144DB3E}.Debug|x64.Build.0 = Debug|x64
+		{7438B64E-55A0-48C1-9A60-85F14144DB3E}.Debug|x86.ActiveCfg = Debug|Win32
+		{7438B64E-55A0-48C1-9A60-85F14144DB3E}.Debug|x86.Build.0 = Debug|Win32
+		{7438B64E-55A0-48C1-9A60-85F14144DB3E}.Release|x64.ActiveCfg = Release|x64
+		{7438B64E-55A0-48C1-9A60-85F14144DB3E}.Release|x64.Build.0 = Release|x64
+		{7438B64E-55A0-48C1-9A60-85F14144DB3E}.Release|x86.ActiveCfg = Release|Win32
+		{7438B64E-55A0-48C1-9A60-85F14144DB3E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
