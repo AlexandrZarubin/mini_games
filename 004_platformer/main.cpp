@@ -1,42 +1,42 @@
-#include<iostream>
+п»ї#include<iostream>
 #include<math.h>
 #include<Windows.h>
 using std::cout;
 using std::endl;
 void SetConsoleSize(int width, int height)
 {
-	// Получаем дескриптор консоли для вывода
+	// РџРѕР»СѓС‡Р°РµРј РґРµСЃРєСЂРёРїС‚РѕСЂ РєРѕРЅСЃРѕР»Рё РґР»СЏ РІС‹РІРѕРґР°
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
-	// Создаем структуру для задания размера буфера экрана консоли
+	// РЎРѕР·РґР°РµРј СЃС‚СЂСѓРєС‚СѓСЂСѓ РґР»СЏ Р·Р°РґР°РЅРёСЏ СЂР°Р·РјРµСЂР° Р±СѓС„РµСЂР° СЌРєСЂР°РЅР° РєРѕРЅСЃРѕР»Рё
 	COORD bufferSize;
-	bufferSize.X = width;  // Задаем ширину буфера
-	bufferSize.Y = height; // Задаем высоту буфера
-	// Устанавливаем размер буфера экрана консоли
+	bufferSize.X = width;  // Р—Р°РґР°РµРј С€РёСЂРёРЅСѓ Р±СѓС„РµСЂР°
+	bufferSize.Y = height; // Р—Р°РґР°РµРј РІС‹СЃРѕС‚Сѓ Р±СѓС„РµСЂР°
+	// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЂР°Р·РјРµСЂ Р±СѓС„РµСЂР° СЌРєСЂР°РЅР° РєРѕРЅСЃРѕР»Рё
 	SetConsoleScreenBufferSize(hConsole, bufferSize);
 
-	// Создаем структуру для задания размера окна консоли
+	// РЎРѕР·РґР°РµРј СЃС‚СЂСѓРєС‚СѓСЂСѓ РґР»СЏ Р·Р°РґР°РЅРёСЏ СЂР°Р·РјРµСЂР° РѕРєРЅР° РєРѕРЅСЃРѕР»Рё
 	SMALL_RECT windowSize;
-	windowSize.Left = 0;            // Левая граница окна консоли (начинается с 0)
-	windowSize.Top = 0;             // Верхняя граница окна консоли (начинается с 0)
-	windowSize.Right = width - 1;   // Правая граница окна консоли (отсчет от 0, поэтому -1)
-	windowSize.Bottom = height - 1; // Нижняя граница окна консоли (отсчет от 0, поэтому -1)
-	// Устанавливаем размер окна консоли
+	windowSize.Left = 0;            // Р›РµРІР°СЏ РіСЂР°РЅРёС†Р° РѕРєРЅР° РєРѕРЅСЃРѕР»Рё (РЅР°С‡РёРЅР°РµС‚СЃСЏ СЃ 0)
+	windowSize.Top = 0;             // Р’РµСЂС…РЅСЏСЏ РіСЂР°РЅРёС†Р° РѕРєРЅР° РєРѕРЅСЃРѕР»Рё (РЅР°С‡РёРЅР°РµС‚СЃСЏ СЃ 0)
+	windowSize.Right = width - 1;   // РџСЂР°РІР°СЏ РіСЂР°РЅРёС†Р° РѕРєРЅР° РєРѕРЅСЃРѕР»Рё (РѕС‚СЃС‡РµС‚ РѕС‚ 0, РїРѕСЌС‚РѕРјСѓ -1)
+	windowSize.Bottom = height - 1; // РќРёР¶РЅСЏСЏ РіСЂР°РЅРёС†Р° РѕРєРЅР° РєРѕРЅСЃРѕР»Рё (РѕС‚СЃС‡РµС‚ РѕС‚ 0, РїРѕСЌС‚РѕРјСѓ -1)
+	// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЂР°Р·РјРµСЂ РѕРєРЅР° РєРѕРЅСЃРѕР»Рё
 	SetConsoleWindowInfo(hConsole, TRUE, &windowSize);
 
 }
 	const int mapWIDTH = 80+1;
 	const int mapHEIGHT = 25;
 	
-	struct TObject//персонаж
+	struct TObject//РїРµСЂСЃРѕРЅР°Р¶
 	{
 		double x, y;
-		double width, height;//ширина и высота
-		double vertSpeed;//вертикальная скорость
+		double width, height;//С€РёСЂРёРЅР° Рё РІС‹СЃРѕС‚Р°
+		double vertSpeed;//РІРµСЂС‚РёРєР°Р»СЊРЅР°СЏ СЃРєРѕСЂРѕСЃС‚СЊ
 		bool isFly;
 		char cType;
 	};
-	void ClearMap(char map[][mapWIDTH])//заполнение карты
+	void ClearMap(char map[][mapWIDTH])//Р·Р°РїРѕР»РЅРµРЅРёРµ РєР°СЂС‚С‹
 	{
 		for (int i = 0; i < mapHEIGHT; i++)
 		{
@@ -48,23 +48,23 @@ void SetConsoleSize(int width, int height)
 		}
 		map[mapHEIGHT - 1][mapWIDTH - 2] = '\0';
 	}
-	void Print(const char map[][mapWIDTH])//отрисовка карты
+	void Print(const char map[][mapWIDTH])//РѕС‚СЂРёСЃРѕРІРєР° РєР°СЂС‚С‹
 	{
 		for (int i = 0; i < mapHEIGHT; i++)
 		{
 			cout << map[i];
 		}
 	}
-	void SetObjectPos(TObject& obj,const double xPos,const double yPos)//задает позицию персонажа
+	void SetObjectPos(TObject& obj,const double xPos,const double yPos)//Р·Р°РґР°РµС‚ РїРѕР·РёС†РёСЋ РїРµСЂСЃРѕРЅР°Р¶Р°
 	{
 		obj.x = xPos;
 		obj.y = yPos;
 	}
 	void initObject(TObject& obj, const double xPos, const double yPos, const double oWidth, const double oHeight,const char &inType)
 	{
-		//инициалаизация перснонажа
+		//РёРЅРёС†РёР°Р»Р°РёР·Р°С†РёСЏ РїРµСЂСЃРЅРѕРЅР°Р¶Р°
 		SetObjectPos(obj, xPos, yPos);
-		obj.width = oWidth;   //задаем ширину персонажа
+		obj.width = oWidth;   //Р·Р°РґР°РµРј С€РёСЂРёРЅСѓ РїРµСЂСЃРѕРЅР°Р¶Р°
 		obj.height = oHeight;
 		obj.vertSpeed = 0;
 		obj.cType = inType;
@@ -90,7 +90,7 @@ void SetConsoleSize(int width, int height)
 	{
 		return ((x >= 0) && (x < mapWIDTH-1) && (y >= 0) && (y < mapHEIGHT));
 	}
-	void PutObjectOnMap(TObject& obj,char map[][mapWIDTH])//Перемещение персонажа
+	void PutObjectOnMap(TObject& obj,char map[][mapWIDTH])//РџРµСЂРµРјРµС‰РµРЅРёРµ РїРµСЂСЃРѕРЅР°Р¶Р°
 	{
 		int ix = (int)round(obj.x);
 		int iy = (int)round(obj.y);
@@ -160,7 +160,7 @@ int main()
 	TObject mario;
 	TObject *brick=nullptr;
 	int brickLenght;
-	//SetObjectPos(mario, 20, 10);//инициализруем персонаажа
+	//SetObjectPos(mario, 20, 10);//РёРЅРёС†РёР°Р»РёР·СЂСѓРµРј РїРµСЂСЃРѕРЅР°Р°Р¶Р°
 	//initObject(mario, 39, 10, 3, 3);
 	//initObject(brick[0], 20, 20, 40, 5);
 	CreatLevel(brickLenght, mario, &brick);
@@ -181,8 +181,8 @@ int main()
 		}
 		VertMoveOgject(mario,brick, brickLenght);
 		for (int i = 0; i < brickLenght; i++)
-			PutObjectOnMap(brick[i], map);//помещаем персонажа
-		PutObjectOnMap(mario, map);//помещаем персонажа
+			PutObjectOnMap(brick[i], map);//РїРѕРјРµС‰Р°РµРј РїРµСЂСЃРѕРЅР°Р¶Р°
+		PutObjectOnMap(mario, map);//РїРѕРјРµС‰Р°РµРј РїРµСЂСЃРѕРЅР°Р¶Р°
 		setCur(0, 0);
 
 		Print(map);
