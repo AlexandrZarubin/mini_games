@@ -74,8 +74,9 @@ void SetConsoleSize(int width, int height)
 	}
 	// Функция для проверки столкновения двух объектов
 	bool isCollision(TObject& obj1, TObject& obj2);
+	void CreatLevel(int& brickLenght, TObject& mario, TObject*& brick, int&lvl);
 	// Функция для вертикального перемещения объекта (например, гравитация)
-	void VertMoveOgject(TObject& obj, TObject brick[], const int& brickLenght)
+	void VertMoveOgject(TObject& obj, TObject*& brick,  int& brickLenght,int&lvl)
 	{
 		obj.isFly = true;									// Предполагаем, что объект в полете
 		obj.vertSpeed += 0.04;								// Увеличиваем вертикальную скорость (гравитация)
@@ -87,6 +88,15 @@ void SetConsoleSize(int width, int height)
 				obj.y -= obj.vertSpeed;						// Если есть столкновение, отменяем перемещение
 				obj.vertSpeed = 0;							// Сбрасываем вертикальную скорость
 				obj.isFly = false;							// Объект больше не в полете
+				if (brick[i].cType == '+')
+				{
+					
+					++lvl;
+					if (lvl > 2)lvl = 1;
+					CreatLevel(brickLenght,obj,brick, lvl);
+					Sleep(10);
+					
+				}
 				break;
 			}
 		}
@@ -122,7 +132,7 @@ void SetConsoleSize(int width, int height)
 		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),coord);// Устанавливаем позицию курсора
 	}
 	// Функция для горизонтального перемещения карты (и объектов на ней)
-	void HorizionMoveMap(TObject obj[], double dx,const int& brickLenght, TObject&mario)
+	void HorizionMoveMap(TObject*& obj, double dx,const int& brickLenght, TObject&mario)
 	{
 		mario.x -= dx;		// Перемещаем игрока (Марио) в противоположную сторону от перемещения карты
 		for (int i = 0; i < brickLenght; i++)	// Проверяем, не столкнулся ли Марио с каким-либо объектом
@@ -144,27 +154,51 @@ void SetConsoleSize(int width, int height)
 				((obj1.y + obj1.height) > obj2.y) && (obj1.y < (obj2.y + obj2.height));
 	}
 	// Функция для создания уровня (инициализации объектов)
-	void CreatLevel(int&brickLenght,TObject&mario,TObject**brick)
-	{
-		brickLenght = 5;						// Задаем количество кирпичей на уровне
-		initObject(mario, 39, 10, 3, 3,'@');	// Инициализируем Марио
-		*brick = new TObject[brickLenght];		// Выделяем память под массив объектов (кирпичей)
-		if (*brick == nullptr)					// Проверяем успешность выделения памяти
-		{
-			std::cerr << "error allocation memory" << endl;
-			return ;
-		}
-		else
-		{	// Инициализируем каждый кирпич на карте
-			initObject((*brick)[0], 20, 20, 40, 5,'#');
-			initObject((*brick)[1], 60, 15, 10, 10, '#');
-			initObject((*brick)[2], 80, 20, 20, 5, '#');
-			initObject((*brick)[3], 120, 15, 10, 10, '#');
-			initObject((*brick)[4], 150, 20, 40, 5, '#');
-			
+	
+	void CreatLevel(int& brickLenght, TObject& mario, TObject*& brick, int& lvl) {
+		// Удаляем старый массив кирпичей, если он уже существует
+		if (brick != nullptr) {
+			delete[] brick;
+			brick = nullptr;
 		}
 
+		// Инициализируем уровень в зависимости от значения lvl
+		if (lvl == 1) {
+			brickLenght = 6; // Количество кирпичей на уровне 1
+		}
+		else if (lvl == 2) {
+			brickLenght = 4; // Количество кирпичей на уровне 2
+		}
+
+		// Выделяем память под новый массив кирпичей
+		brick = new TObject[brickLenght];
+
+		if (brick == nullptr) {
+			std::cerr << "Error allocating memory" << endl;
+			return;
+		}
+
+		// Инициализируем Марио
+		initObject(mario, 39, 10, 3, 3, '@');
+
+		// Инициализируем кирпичи в зависимости от уровня
+		if (lvl == 1) {
+			initObject(brick[0], 20, 20, 40, 5, '#');
+			initObject(brick[1], 60, 15, 10, 10, '#');
+			initObject(brick[2], 80, 20, 20, 5, '#');
+			initObject(brick[3], 120, 15, 10, 10, '#');
+			initObject(brick[4], 150, 20, 40, 5, '#');
+			initObject(brick[5], 210, 15, 10, 10, '+');
+		}
+		else if (lvl == 2) {
+			initObject(brick[0], 20, 20, 40, 5, '#');
+			initObject(brick[1], 80, 20, 15, 5, '#');
+			initObject(brick[2], 110, 15, 15, 10, '#');
+			initObject(brick[3], 130, 10, 15, 15, '+');
+			
+		}
 	}
+
 int main()
 {
 	SetConsoleSize(80,25);			// Устанавливаем размер окна консоли
@@ -172,7 +206,8 @@ int main()
 	TObject mario;					// Создаем объект Марио
 	TObject *brick=nullptr;			// Создаем указатель на массив объектов (кирпичей)
 	int brickLenght;				// Переменная для хранения количества кирпичей
-	CreatLevel(brickLenght, mario, &brick);// Создаем уровень
+	int lvl=1;
+	CreatLevel(brickLenght, mario, brick,lvl);// Создаем уровень
 	do
 	{
 		ClearMap(map);				// Очищаем карту перед обновлением
@@ -181,14 +216,9 @@ int main()
 		if (GetKeyState('D') < 0)HorizionMoveMap(brick, -1, brickLenght,mario);			// Движение вправо
 		if (mario.y > mapHEIGHT - 1)	 // Если Марио упал ниже нижней границы карты
 		{
-			if (brick != nullptr)
-			{
-				delete[]brick;
-				brick = nullptr;
-			}
-			CreatLevel(brickLenght, mario, &brick);	// Пересоздаем урове
+			CreatLevel(brickLenght, mario, brick, lvl);	// Пересоздаем урове
 		}
-		VertMoveOgject(mario,brick, brickLenght);	// Обновляем вертикальное движение Марио
+		VertMoveOgject(mario,brick, brickLenght,lvl);	// Обновляем вертикальное движение Марио
 		for (int i = 0; i < brickLenght; i++)		// Обновляем позицию кирпичей на карте	
 			PutObjectOnMap(brick[i], map);			//помещаем персонажа
 		PutObjectOnMap(mario, map);					// Обновляем позицию Марио на карте
@@ -196,7 +226,8 @@ int main()
 
 		Print(map);									// Печатаем карту
 		Sleep(10);									// Задержка для сглаживания анимации
-	} while (GetKeyState(VK_ESCAPE)>=0);			// Цикл продолжается, пока не нажата клавиша ESC
+	} while (true);			// Цикл продолжается, пока не нажата клавиша ESC
+	//} while (GetKeyState(VK_ESCAPE)>=0);			// Цикл продолжается, пока не нажата клавиша ESC
 
 	
 	if (brick != nullptr)							// Удаляем массив кирпичей после завершения работы
