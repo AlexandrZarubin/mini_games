@@ -1,73 +1,95 @@
 #include <iostream>
-#include <vector>
-#include <ctime>
-#include <cstdlib>
-#include <conio.h> // Для использования _getch()
-
-using namespace std;
-
+#include <math.h>
+#include<Windows.h>
+const int mapWIDTH = 80 + 1;			// Ширина карты с учетом завершающего символа '\0'
+const int mapHEIGHT = 25;
+void ClearMap(char map[][mapWIDTH])
+{
+    for (int i = 0; i < mapHEIGHT; i++)
+    {
+        for (int j = 0; j < mapWIDTH; j++)
+        {
+            if (j < mapWIDTH - 1)
+                map[i][j] = '.'; // Заполнение пробелами
+            else
+                map[i][j] = '\0'; // Последний символ строки — завершающий нуль
+        }
+    }
+}
+void Print(const char map[][mapWIDTH])
+{
+    for (int i = 0; i < mapHEIGHT; i++)
+    {
+        std::cout << map[i];  // Печать строки карты
+    }
+}
+bool isPosInMap(const int& x, const int& y)
+{
+    return ((x >= 0) && (x < mapWIDTH - 1) && (y >= 0) && (y < mapHEIGHT));
+}
+struct TObject
+{
+    double x;
+    int y;        // Позиция объекта на карте
+    int width, height; // Ширина и высота объекта
+};
+void SetObjectPos(TObject& obj, const double xPos, const int yPos);
+void initObject(TObject& obj, const double xPos, const int yPos, const int oWidth, const int oHeight)
+{
+    SetObjectPos(obj, xPos, yPos);  // Установка позиции объекта
+    obj.width = oWidth;             // Установка ширины объекта
+    obj.height = oHeight;           // Установка высоты объекта
+}
+void SetObjectPos(TObject& obj, const double xPos, const int yPos)
+{
+    obj.x = xPos;		// Установка координаты X
+    obj.y = yPos;		// Установка координаты Y
+}
+void PutObjectOnMap(TObject& obj, char map[][mapWIDTH])//Перемещение персонажа
+{
+    int ix = (int)round(obj.x);						// Округляем координату X
+    int iy = (int)round(obj.y);						// Округляем координату Y
+    int iWidth = obj.width;				// Округляем ширину
+    int iHeght = obj.height;			// Округляем высоту
+    // Заполняем карту символами объекта
+    for (int i = ix; i < (ix + iWidth); i++)
+    {
+        for (int j = iy; j < (iy + iHeght); j++)
+        {
+            if (isPosInMap(i, j))					// Если позиция внутри карты
+                map[j][i] = '@';				// Устанавливаем символ объект
+        }
+    }
+}
+void HorizionMoveMap(TObject& obj, double dx,double mx, TObject& mario)
+{
+    mario.x -= mx;   // Сначала сдвигаем Марио в противоположную сторону
+    obj.x += dx;     // Затем сдвигаем объекты на карте
+}void setCur(int x, int y)
+{
+    COORD coord;			// Создаем структуру для задания позиции курсора
+    coord.X = x;				// Устанавливаем координату X
+    coord.Y = y;				// Устанавливаем координату Y
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);// Устанавливаем позицию курсора
+}
 int main() {
-    const int rows = 10;
-    const int cols = 20;
-    vector<string> mas(rows, string(cols, ' ')); // Используем вектор строк вместо массива
-    int x = 10, y = 5;
-    char key;
-    int ox, oy;
-    int ax = 5, ay = 3;
-    int count = 0;
-    srand(static_cast<unsigned>(time(0)));
-
-    do {
-        // Заполняем верхнюю и нижнюю границы
-        mas[0] = string(cols, '#');
-        mas[9] = string(cols, '#');
-
-        // Заполняем остальные строки границами
-        for (int i = 1; i < 9; ++i) {
-            mas[i] = "#" + string(cols - 2, ' ') + "#";
-        }
-
-        mas[y][x] = '@'; // Игрок
-        mas[ay][ax] = '*'; // Цель
-
-        system("cls"); // Очистка экрана
-
-        //// Выводим игровое поле
-        //for (const auto& row : mas) {
-        //    cout << row << endl;
-        //}
-        // Выводим игровое поле с использованием обычного цикла for
-        for (int i = 0; i < rows; ++i) {
-            cout << mas[i] << endl;
-        }
-
-        cout << count;
-
-        key = _getch(); // Считываем нажатие клавиши
-        ox = x;
-        oy = y;
-
-        // Обработка управления
-        if (key == 'w') y--;
-        if (key == 's') y++;
-        if (key == 'a') x--;
-        if (key == 'd') x++;
-
-        // Проверка на столкновение со стеной
-        if (mas[y][x] == '#') {
-            x = ox;
-            y = oy;
-        }
-
-        // Проверка на столкновение с целью
-        if (x == ax && y == ay) {
-            ax = rand() % (cols - 2) + 1;
-            ay = rand() % (rows - 2) + 1;
-            count++;
-        }
-
-        mas[y][x] = ' '; // Очищаем предыдущее положение игрока
-    } while (key != 'e'); // Выход по нажатию 'e'
-
+    char map[mapHEIGHT][mapWIDTH];
+    TObject mario;
+    TObject brick;
+    initObject(mario, 39, 10, 3, 3);   // Инициализация Марио
+    initObject(brick, 20, 20, 40, 5);  // Инициализация кирпича
+    do
+    {
+        ClearMap(map);
+        if (GetKeyState('A') < 0)
+            HorizionMoveMap(brick,1, 0.1, mario);   // Движение влево
+        if (GetKeyState('D') < 0)
+            HorizionMoveMap(brick,-1, -0.1, mario);  // Движение вправо
+        PutObjectOnMap(brick, map);
+        PutObjectOnMap(mario, map);
+        setCur(0, 0);
+        Print(map);
+        Sleep(1);
+    } while (true);
     return 0;
 }
